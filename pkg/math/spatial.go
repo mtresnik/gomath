@@ -1,4 +1,6 @@
-package geometry
+package math
+
+import "fmt"
 
 type Spatial interface {
 	GetValues() []float64
@@ -16,4 +18,8 @@ func ToVector(s Spatial) Vector {
 
 func ToPoint(sp Spatial) Point {
 	return Point{sp.GetValues()}
+}
+
+func String(sp Spatial) string {
+	return fmt.Sprintf("Values: %v", sp.GetValues())
 }

@@ -1,4 +1,4 @@
-package geometry
+package math
 
 type Point struct {
 	Values []float64

@@ -1,4 +1,4 @@
-package geometry
+package math
 
 type Segment interface {
 	From() Spatial
