@@ -4,69 +4,73 @@ type Point struct {
 	Values []float64
 }
 
-func (a Point) GetValues() []float64 {
-	return a.Values
+func (p Point) String() string {
+	return SpatialString(p, "(", ")")
 }
 
-func (a Point) SetValues(values []float64) {
-	a.Values = values
+func (p Point) GetValues() []float64 {
+	return p.Values
 }
 
-func (a Point) ToVector() Vector {
-	return Vector{a.Values}
+func (p Point) SetValues(values []float64) {
+	p.Values = values
 }
 
-func (a Point) X() float64 {
-	if len(a.Values) < 1 {
+func (p Point) ToVector() Vector {
+	return Vector{p.Values}
+}
+
+func (p Point) X() float64 {
+	if len(p.Values) < 1 {
 		return 0.0
 	}
-	return a.Values[0]
+	return p.Values[0]
 }
 
-func (a Point) Y() float64 {
-	if len(a.Values) < 2 {
+func (p Point) Y() float64 {
+	if len(p.Values) < 2 {
 		return 0.0
 	}
-	return a.Values[1]
+	return p.Values[1]
 }
 
-func (a Point) Z() float64 {
-	if len(a.Values) < 3 {
+func (p Point) Z() float64 {
+	if len(p.Values) < 3 {
 		return 0.0
 	}
-	return a.Values[2]
+	return p.Values[2]
 }
 
-func (a Point) W() float64 {
-	if len(a.Values) < 4 {
+func (p Point) W() float64 {
+	if len(p.Values) < 4 {
 		return 0.0
 	}
-	return a.Values[3]
+	return p.Values[3]
 }
 
-func (a Point) Add(other Point) Point {
-	return a.ToVector().Add(other.ToVector()).ToPoint()
+func (p Point) Add(other Point) Point {
+	return p.ToVector().Add(other.ToVector()).ToPoint()
 }
 
-func (a Point) AddVector(other Vector) Point {
-	return a.ToVector().Add(other).ToPoint()
+func (p Point) AddVector(other Vector) Point {
+	return p.ToVector().Add(other).ToPoint()
 }
 
-func (a Point) Subtract(other Point) Vector {
-	return a.ToVector().Subtract(other.ToVector())
+func (p Point) Subtract(other Point) Vector {
+	return p.ToVector().Subtract(other.ToVector())
 }
 
-func (a Point) DistanceTo(other Point, function ...DistanceFunction) float64 {
+func (p Point) DistanceTo(other Point, function ...DistanceFunction) float64 {
 	if len(function) > 0 {
-		return function[0].Eval(a, other)
+		return function[0].Eval(p, other)
 	}
-	return EuclideanDistance{}.Eval(a, other)
+	return EuclideanDistance{}.Eval(p, other)
 }
 
-func (a Point) Size() int {
-	return len(a.Values)
+func (p Point) Size() int {
+	return len(p.Values)
 }
 
-func (a Point) Equals(other Point) bool {
-	return a.ToVector().Equals(other.ToVector())
+func (p Point) Equals(other Point) bool {
+	return p.ToVector().Equals(other.ToVector())
 }

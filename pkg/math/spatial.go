@@ -1,7 +1,5 @@
 package math
 
-import "fmt"
-
 type Spatial interface {
 	GetValues() []float64
 	SetValues([]float64)
@@ -20,6 +18,6 @@ func ToPoint(sp Spatial) Point {
 	return Point{sp.GetValues()}
 }
 
-func String(sp Spatial) string {
-	return fmt.Sprintf("Values: %v", sp.GetValues())
+func SpatialString(sp Spatial, braces ...string) string {
+	return Float64ArrayToString(sp.GetValues(), braces...)
 }

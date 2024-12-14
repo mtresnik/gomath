@@ -5,6 +5,10 @@ type Segment interface {
 	To() Spatial
 }
 
+func String(segment Segment) string {
+	return "[" + SpatialString(segment.From()) + " -> " + SpatialString(segment.To()) + "]"
+}
+
 func Length(segment Segment, distanceFunction ...DistanceFunction) float64 {
 	return ToPoint(segment.From()).DistanceTo(ToPoint(segment.To()), distanceFunction...)
 }
