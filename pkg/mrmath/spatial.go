@@ -1,4 +1,4 @@
-package math
+package mrmath
 
 type Spatial interface {
 	GetValues() []float64

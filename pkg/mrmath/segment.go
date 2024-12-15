@@ -1,4 +1,4 @@
-package math
+package mrmath
 
 type Segment interface {
 	From() Spatial

@@ -1,4 +1,4 @@
-package math
+package mrmath
 
 type Shape interface {
 	GetPoints() []Point
