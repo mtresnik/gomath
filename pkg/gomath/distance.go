@@ -1,4 +1,4 @@
-package mrmath
+package gomath
 
 import "math"
 
@@ -30,5 +30,17 @@ func (f HaversineDistance) Eval(one, other Spatial) float64 {
 type ManhattanDistance struct{}
 
 func (f ManhattanDistance) Eval(one, other Spatial) float64 {
-	return math.Abs(one.X()-other.X()) + math.Abs(one.Y()-other.Y())
+	retValue := 0.0
+	for i := 0; i < max(len(one.GetValues()), len(other.GetValues())); i++ {
+		left, right := 0.0, 0.0
+		if i < len(one.GetValues()) {
+			left = one.GetValues()[i]
+		}
+		if i < len(other.GetValues()) {
+			right = other.GetValues()[i]
+		}
+		delta := math.Abs(left - right)
+		retValue += delta
+	}
+	return retValue
 }

@@ -1,4 +1,4 @@
-package mrmath
+package gomath
 
 type Point struct {
 	Values []float64

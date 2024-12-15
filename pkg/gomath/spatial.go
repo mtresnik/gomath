@@ -1,4 +1,6 @@
-package mrmath
+package gomath
+
+import "github.com/mtresnik/goutils/pkg/goutils"
 
 type Spatial interface {
 	GetValues() []float64
@@ -10,8 +12,8 @@ type Spatial interface {
 	W() float64
 }
 
-func ToVector(s Spatial) Vector {
-	return Vector{s.GetValues()}
+func ToVector(sp Spatial) Vector {
+	return Vector{sp.GetValues()}
 }
 
 func ToPoint(sp Spatial) Point {
@@ -19,5 +21,5 @@ func ToPoint(sp Spatial) Point {
 }
 
 func SpatialString(sp Spatial, braces ...string) string {
-	return Float64ArrayToString(sp.GetValues(), braces...)
+	return goutils.Float64ArrayToString(sp.GetValues(), braces...)
 }
