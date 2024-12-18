@@ -1,7 +1,53 @@
 package gomath
 
+import (
+	"math/rand"
+	"time"
+)
+
 type Point struct {
 	Values []float64
+}
+
+func NewPoint(values ...float64) Point {
+	return Point{Values: values}
+}
+
+func RandomPoints(num, dim int, pScalar ...float64) []Point {
+	random := rand.New(rand.NewSource(time.Now().UnixNano()))
+	scalar := 1.0
+	if len(pScalar) > 0 {
+		scalar = pScalar[0]
+	}
+	retSlice := make([]Point, num)
+	for i := range retSlice {
+		retSlice[i] = Point{Values: []float64{}}
+		for j := 0; j < dim; j++ {
+			retSlice[i].Values = append(retSlice[i].Values, random.Float64()*scalar)
+		}
+	}
+	return retSlice
+}
+
+func ComparePoints(p1, p2 Point) int {
+	for i, v := range p1.Values {
+		if v != p2.Values[i] {
+			if v < p2.Values[i] {
+				return -1
+			} else {
+				return 1
+			}
+		}
+	}
+	return 0
+}
+
+func PointsToSpatial(points ...Point) []Spatial {
+	retSlice := make([]Spatial, len(points))
+	for i, p := range points {
+		retSlice[i] = p
+	}
+	return retSlice
 }
 
 func (p Point) String() string {

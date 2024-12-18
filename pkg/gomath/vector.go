@@ -8,6 +8,14 @@ type Vector struct {
 	Values []float64
 }
 
+func VectorToSpatial(vectors ...Vector) []Spatial {
+	retSlice := make([]Spatial, len(vectors))
+	for i, p := range vectors {
+		retSlice[i] = p
+	}
+	return retSlice
+}
+
 func (v Vector) String() string {
 	return SpatialString(v, "<", ">")
 }

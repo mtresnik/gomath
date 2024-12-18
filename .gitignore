@@ -9,6 +9,10 @@
 *.dylib
 *.iml
 
+# Disable UI output
+*.png
+*.gif
+
 # Test binary, built with `go test -c`
 *.test
 
