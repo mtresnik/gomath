@@ -9,8 +9,8 @@ type Point struct {
 	Values []float64
 }
 
-func NewPoint(values ...float64) Point {
-	return Point{Values: values}
+func NewPoint(values ...float64) *Point {
+	return &Point{Values: values}
 }
 
 func RandomPoints(num, dim int, pScalar ...float64) []Point {

@@ -6,67 +6,102 @@ import (
 )
 
 type Polygon struct {
-	Points []Point
-	bbox   BoundingBox
+	Points   []Point // Vertices of the polygon, ordered counterclockwise
+	Edges    []Edge  // Edges of the polygon
+	bbox     BoundingBox
+	centroid *Point
 	Shape
 }
 
+// NewPolygon creates a new polygon from a slice of points.
+// Assumes the points form a valid boundary (e.g., convex hull).
 func NewPolygon(points ...Point) *Polygon {
+	// Ensure points are sorted (by x, then y) for consistency
 	sort.Slice(points, func(i, j int) bool {
-		return ComparePoints(points[i], points[j]) < 0
+		if points[i].X() == points[j].X() {
+			return points[i].Y() < points[j].Y()
+		}
+		return points[i].X() < points[j].X()
 	})
+
+	// Construct edges from the points in counterclockwise order
+	var edges []Edge
+	for i := 0; i < len(points); i++ {
+		p1 := points[i]
+		p2 := points[(i+1)%len(points)] // Wrap around to the first vertex
+		edges = append(edges, Edge{P1: p1, P2: p2})
+	}
+
 	return &Polygon{
 		Points: points,
+		Edges:  edges,
 		bbox:   NewBoundingBox(PointsToSpatial(points...)...),
 	}
 }
 
-func (a *Polygon) GetPoints() []Point {
-	return a.Points
+// Area calculates the area of the polygon using the shoelace formula.
+func (p *Polygon) Area() float64 {
+	n := len(p.Points)
+	if n < 3 {
+		return 0 // Not a valid polygon
+	}
+
+	area := 0.0
+	for i := 0; i < n; i++ {
+		j := (i + 1) % n
+		area += p.Points[i].X()*p.Points[j].Y() - p.Points[j].X()*p.Points[i].Y()
+	}
+	return math.Abs(area) / 2
 }
 
-func (a *Polygon) Area() float64 {
-	return 0
+func (p *Polygon) GetCentroid() *Point {
+	if p.centroid != nil {
+		return p.centroid
+	}
+	n := len(p.Points)
+	if n < 3 {
+		// Degenerate case: If fewer than 3 points, no valid polygon exists
+		return NewPoint(0, 0)
+	}
+
+	// Initialize accumulators for centroid coordinates and the area
+	var cx, cy, areaAcc float64
+
+	for i := 0; i < n; i++ {
+		// Current point and the next point (wrapping around for the last point)
+		x1, y1 := p.Points[i].X(), p.Points[i].Y()
+		x2, y2 := p.Points[(i+1)%n].X(), p.Points[(i+1)%n].Y()
+
+		// Cross product for the current edge
+		cross := x1*y2 - x2*y1
+
+		// Accumulate the centroid coordinates
+		cx += (x1 + x2) * cross
+		cy += (y1 + y2) * cross
+
+		// Accumulate the area (using the shoelace formula)
+		areaAcc += cross
+	}
+
+	// Calculate the actual area of the polygon
+	area := math.Abs(areaAcc) / 2
+
+	// Calculate the centroid coordinates
+	cx /= (6 * area)
+	cy /= (6 * area)
+
+	p.centroid = NewPoint(cx, cy)
+	return p.centroid
 }
 
-func (a *Polygon) Contains(point Point, distanceFunction ...DistanceFunction) bool {
-	if !a.bbox.Contains(point) {
-		return false
-	}
-	if len(a.Points) < 3 {
-		return false
-	}
-	inside := false
-	n := len(a.Points)
+// Contains checks if a point is inside the polygon using edge intersections.
+func (p *Polygon) Contains(point Point) bool {
+	tempPoints := append(p.Points, p.Points...)
+	tempPoints = append(tempPoints, point)
+	return p.Area() == NewPolygon(ConvexHull(tempPoints)...).Area()
 
-	j := n - 1
-	for i := 0; i < n; {
-		vertexI := a.Points[i]
-		vertexJ := a.Points[j]
-		if isPointOnLine(point, vertexI, vertexJ, distanceFunction...) {
-			return true
-		}
-		if ((vertexI.Y() > point.Y()) != (vertexJ.Y() > point.Y())) &&
-			(point.X() < (vertexJ.X()-vertexI.X())*(point.Y()-vertexI.Y())/
-				(vertexJ.Y()-vertexI.Y())+vertexI.X()) {
-			inside = !inside
-		}
-		j = i
-		i++
-	}
-	return inside
 }
 
-func isPointOnLine(point Point, vertexI, vertexJ Point, pDistanceFunction ...DistanceFunction) bool {
-	var distanceFunction DistanceFunction = EuclideanDistance{}
-	if len(pDistanceFunction) > 0 {
-		distanceFunction = pDistanceFunction[0]
-	}
-	d1 := distanceFunction.Eval(point, vertexI)
-	d2 := distanceFunction.Eval(point, vertexJ)
-	lineLength := distanceFunction.Eval(vertexI, vertexJ)
-
-	epsilon := 0.0001
-
-	return math.Abs(d1+d2-lineLength) < epsilon
+func Theta(p1, p2 Point) float64 {
+	return math.Atan2(p2.Y()-p1.Y(), p2.X()-p1.X())
 }
