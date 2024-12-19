@@ -8,7 +8,6 @@ import (
 
 type Spatial interface {
 	GetValues() []float64
-	SetValues([]float64)
 	Size() int
 	X() float64
 	Y() float64
@@ -32,10 +31,18 @@ func HashSpatial(spatial Spatial) int64 {
 }
 
 func ToVector(sp Spatial) Vector {
+	v, ok := sp.(Vector)
+	if ok {
+		return v
+	}
 	return Vector{sp.GetValues()}
 }
 
 func ToPoint(sp Spatial) Point {
+	p, ok := sp.(Point)
+	if ok {
+		return p
+	}
 	return Point{sp.GetValues()}
 }
 

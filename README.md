@@ -1,6 +1,6 @@
 # gomath
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/mtresnik/gomath/blob/main/LICENSE)
-[![version](https://img.shields.io/badge/version-1.1.4-blue)](https://github.com/mtresnik/gomath/releases/tag/v1.1.4)
+[![version](https://img.shields.io/badge/version-1.1.5-blue)](https://github.com/mtresnik/gomath/releases/tag/v1.1.5)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-green.svg?style=flat-square)](https://makeapullrequest.com)
 <hr>
 
@@ -21,7 +21,7 @@ module mymodule
 
 go 1.23.3
 
-require github.com/mtresnik/gomath v1.1.4
+require github.com/mtresnik/gomath v1.1.5
 ```
 
 

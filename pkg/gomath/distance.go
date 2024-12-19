@@ -2,20 +2,13 @@ package gomath
 
 import "math"
 
-type DistanceFunction interface {
-	Eval(a Spatial, b Spatial) float64
+type DistanceFunction func(one, other Spatial) float64
+
+var EuclideanDistance = func(one, other Spatial) float64 {
+	return math.Sqrt(ToVector(one).Subtract(ToVector(other)).Magnitude())
 }
 
-type EuclideanDistance struct{}
-
-func (f EuclideanDistance) Eval(a, b Spatial) float64 {
-	return math.Sqrt(ToVector(a).Subtract(ToVector(b)).Magnitude())
-}
-
-type HaversineDistance struct {
-}
-
-func (f HaversineDistance) Eval(one, other Spatial) float64 {
+var HaversineDistance = func(one, other Spatial) float64 {
 	lon1, lat1 := one.X(), one.Y()
 	lon2, lat2 := other.X(), other.Y()
 	earthRadius := 6371000.0
@@ -27,9 +20,7 @@ func (f HaversineDistance) Eval(one, other Spatial) float64 {
 	return earthRadius * c
 }
 
-type ManhattanDistance struct{}
-
-func (f ManhattanDistance) Eval(one, other Spatial) float64 {
+var ManhattanDistance = func(one, other Spatial) float64 {
 	retValue := 0.0
 	for i := 0; i < max(len(one.GetValues()), len(other.GetValues())); i++ {
 		left, right := 0.0, 0.0

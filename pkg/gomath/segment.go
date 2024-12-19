@@ -5,6 +5,13 @@ type Segment interface {
 	To() Spatial
 }
 
+func NewSegment(from, to Spatial) Segment {
+	return LineSegment{
+		from: from,
+		to:   to,
+	}
+}
+
 func String(segment Segment) string {
 	return "[" + SpatialString(segment.From()) + " -> " + SpatialString(segment.To()) + "]"
 }

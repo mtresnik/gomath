@@ -1,6 +1,7 @@
 package gomath
 
 import (
+	"math"
 	"math/rand"
 	"time"
 )
@@ -34,7 +35,7 @@ func ComparePoints(p1, p2 Point) int {
 		if v != p2.Values[i] {
 			if v < p2.Values[i] {
 				return -1
-			} else {
+			} else if v > p2.Values[i] {
 				return 1
 			}
 		}
@@ -56,10 +57,6 @@ func (p Point) String() string {
 
 func (p Point) GetValues() []float64 {
 	return p.Values
-}
-
-func (p Point) SetValues(values []float64) {
-	p.Values = values
 }
 
 func (p Point) ToVector() Vector {
@@ -108,9 +105,9 @@ func (p Point) Subtract(other Point) Vector {
 
 func (p Point) DistanceTo(other Point, function ...DistanceFunction) float64 {
 	if len(function) > 0 {
-		return function[0].Eval(p, other)
+		return function[0](p, other)
 	}
-	return EuclideanDistance{}.Eval(p, other)
+	return EuclideanDistance(p, other)
 }
 
 func (p Point) Size() int {
@@ -119,4 +116,55 @@ func (p Point) Size() int {
 
 func (p Point) Equals(other Point) bool {
 	return p.ToVector().Equals(other.ToVector())
+}
+
+func Theta(p1, p2 Point) float64 {
+	retAngle := math.Atan2(p2.Y()-p1.Y(), p2.X()-p1.X())
+	if retAngle < 0 {
+		retAngle += 2 * math.Pi
+	}
+	return retAngle
+}
+
+func Average(points ...Point) *Point {
+	if len(points) == 0 {
+		return NewPoint(0, 0)
+	}
+	var retPoint Point
+	for _, p := range points {
+		retPoint = retPoint.Add(p)
+	}
+	vectorSum := retPoint.ToVector()
+	retPoint = vectorSum.Scale(1.0 / float64(len(points))).ToPoint()
+	return &retPoint
+}
+
+func Centroid(points ...Point) *Point {
+	var centroid *Point
+	n := len(points)
+	if n < 3 {
+		return Average(points...)
+	}
+
+	var cx, cy, areaAcc float64
+
+	for i := 0; i < n; i++ {
+		x1, y1 := points[i].X(), points[i].Y()
+		x2, y2 := points[(i+1)%n].X(), points[(i+1)%n].Y()
+
+		cross := x1*y2 - x2*y1
+
+		cx += (x1 + x2) * cross
+		cy += (y1 + y2) * cross
+
+		areaAcc += cross
+	}
+
+	area := math.Abs(areaAcc) / 2
+
+	cx /= (6 * area)
+	cy /= (6 * area)
+
+	centroid = NewPoint(cx, cy)
+	return centroid
 }

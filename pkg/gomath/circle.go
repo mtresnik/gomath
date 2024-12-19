@@ -7,15 +7,19 @@ type Circle struct {
 	Radius float64
 }
 
-func (c Circle) Area() float64 {
+func NewCircle(center Point, radius float64) *Circle {
+	return &Circle{Center: center, Radius: radius}
+}
+
+func (c *Circle) Area() float64 {
 	return math.Pi * c.Radius * c.Radius
 }
 
-func (c Circle) Contains(point Point, distanceFunction ...DistanceFunction) bool {
+func (c *Circle) Contains(point Point, distanceFunction ...DistanceFunction) bool {
 	return c.Center.DistanceTo(point, distanceFunction...) <= c.Radius
 }
 
-func (c Circle) GetPoints() []Point {
+func (c *Circle) GetPoints() []Point {
 	retPoints := make([]Point, 100)
 	for i := 0; i < len(retPoints); i++ {
 		theta := 2 * math.Pi * float64(i) / float64(len(retPoints))

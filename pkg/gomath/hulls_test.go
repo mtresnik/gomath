@@ -17,8 +17,8 @@ func TestConvexHull_Points(t *testing.T) {
 	for _, point := range points {
 		contains := false
 		for _, other := range unqiuePoints {
-			dist := EuclideanDistance{}
-			if dist.Eval(point, other) < 1.0 {
+			dist := EuclideanDistance
+			if dist(point, other) < 1.0 {
 				contains = true
 				break
 			}

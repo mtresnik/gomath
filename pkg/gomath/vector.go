@@ -28,10 +28,6 @@ func (v Vector) GetValues() []float64 {
 	return v.Values
 }
 
-func (v Vector) SetValues(values []float64) {
-	v.Values = values
-}
-
 func (v Vector) X() float64 {
 	if len(v.Values) < 1 {
 		return 0.0

@@ -7,7 +7,7 @@ type Triangle struct {
 
 func (t *Triangle) Contains(point Point, distanceFunction ...DistanceFunction) bool {
 
-	// Calculate areas
+	// Split up into 3 separate triangles and calculate the area that way
 	area1 := 0.5 * ((t.points[0].X() * (t.points[1].Y() - point.Y())) +
 		(t.points[1].X() * (point.Y() - t.points[0].Y())) +
 		(point.X() * (t.points[0].Y() - t.points[1].Y())))
@@ -20,7 +20,6 @@ func (t *Triangle) Contains(point Point, distanceFunction ...DistanceFunction) b
 		(t.points[0].X() * (point.Y() - t.points[2].Y())) +
 		(point.X() * (t.points[2].Y() - t.points[0].Y())))
 
-	// Check if sum of sub-triangle areas equals total triangle area
 	totalArea := t.Area()
 	return area1+area2+area3 == totalArea
 }
