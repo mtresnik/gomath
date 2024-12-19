@@ -4,7 +4,7 @@ import (
 	"sort"
 )
 
-func ConvexHull(points []Point) []Point {
+func ConvexHull(points ...Point) []Point {
 	if len(points) <= 1 {
 		return points
 	}

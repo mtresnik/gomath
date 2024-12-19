@@ -2,8 +2,6 @@ package gomath
 
 import (
 	"github.com/mtresnik/goutils/pkg/goutils"
-	"hash/fnv"
-	"math"
 )
 
 type Spatial interface {
@@ -16,18 +14,7 @@ type Spatial interface {
 }
 
 func HashSpatial(spatial Spatial) int64 {
-	hasher := fnv.New64a()
-
-	for _, value := range spatial.GetValues() {
-		bits := math.Float64bits(value)
-		buf := make([]byte, 8)
-		for i := 0; i < 8; i++ {
-			buf[i] = byte(bits >> (i * 8))
-		}
-		_, _ = hasher.Write(buf)
-	}
-
-	return int64(hasher.Sum64())
+	return goutils.HashFloats(spatial.GetValues()...)
 }
 
 func ToVector(sp Spatial) Vector {

@@ -62,6 +62,6 @@ func (p *Polygon) GetCentroid() *Point {
 func (p *Polygon) Contains(point Point) bool {
 	tempPoints := append(p.Points, p.Points...)
 	tempPoints = append(tempPoints, point)
-	return p.Area() == NewPolygon(ConvexHull(tempPoints)...).Area()
+	return p.Area() == NewPolygon(ConvexHull(tempPoints...)...).Area()
 
 }

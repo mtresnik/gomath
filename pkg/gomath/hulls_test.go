@@ -28,7 +28,7 @@ func TestConvexHull_Points(t *testing.T) {
 			println(point.String())
 		}
 	}
-	hull := ConvexHull(unqiuePoints)
+	hull := ConvexHull(unqiuePoints...)
 	println("Hull: ", len(hull))
 	polygon := NewPolygon(hull...)
 	imgRect := image.Rect(0, 0, int(imageSize), int(imageSize))
