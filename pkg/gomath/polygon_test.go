@@ -19,7 +19,7 @@ func TestPolygon_Contains(t *testing.T) {
 		*NewPoint(10, 20),
 	}
 
-	polygon := NewPolygon(points...)
+	polygon := NewPolygon(ConvexHull(points...)...)
 	imgRect := image.Rect(0, 0, int(imageSize), int(imageSize))
 	img := image.NewRGBA(imgRect)
 	for row := 0; row < int(imageSize); row++ {
