@@ -10,9 +10,7 @@ func Mean(values []float64) float64 {
 	if len(values) == 0 {
 		return 0
 	}
-	return goutils.SumBy(values, func(v float64) float64 {
-		return v
-	}) / float64(len(values))
+	return goutils.SumOf(values...) / float64(len(values))
 }
 
 func StandardDeviation(numbers []float64) float64 {

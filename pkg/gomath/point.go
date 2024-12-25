@@ -1,6 +1,7 @@
 package gomath
 
 import (
+	"github.com/mtresnik/goutils/pkg/goutils"
 	"math"
 	"math/rand"
 	"time"
@@ -44,11 +45,9 @@ func ComparePoints(p1, p2 Point) int {
 }
 
 func PointsToSpatial(points ...Point) []Spatial {
-	retSlice := make([]Spatial, len(points))
-	for i, p := range points {
-		retSlice[i] = p
-	}
-	return retSlice
+	return goutils.Map(points, func(p Point) Spatial {
+		return p
+	})
 }
 
 func (p Point) String() string {
@@ -162,8 +161,8 @@ func Centroid(points ...Point) *Point {
 
 	area := math.Abs(areaAcc) / 2
 
-	cx /= (6 * area)
-	cy /= (6 * area)
+	cx /= 6 * area
+	cy /= 6 * area
 
 	centroid = NewPoint(cx, cy)
 	return centroid

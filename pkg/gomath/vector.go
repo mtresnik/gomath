@@ -1,6 +1,7 @@
 package gomath
 
 import (
+	"github.com/mtresnik/goutils/pkg/goutils"
 	"math"
 )
 
@@ -94,14 +95,9 @@ func (v Vector) Subtract(other Vector) Vector {
 }
 
 func (v Vector) DotProduct(other Vector) float64 {
-	over := min(len(v.Values), len(other.Values))
-	sum := 0.0
-	for i := 0; i < over; i++ {
-		if i < len(v.Values) && i < len(other.Values) {
-			sum += v.Values[i] * other.Values[i]
-		}
-	}
-	return sum
+	return goutils.SumOf(goutils.Zip(v.Values, other.Values, func(a, b float64) float64 {
+		return a * b
+	})...)
 }
 
 func (v Vector) Magnitude() float64 {
@@ -111,7 +107,7 @@ func (v Vector) Magnitude() float64 {
 
 func (v Vector) CrossProduct(other Vector) (Vector, *error) {
 	X := v.Y()*other.Z() - other.Y()*v.Z()
-	Y := v.Z()*other.X() - other.Values[2]*v.X()
+	Y := v.Z()*other.X() - other.Z()*v.X()
 	Z := v.X()*other.Y() - other.X()*v.Y()
 	return Vector{[]float64{X, Y, Z}}, nil
 }
